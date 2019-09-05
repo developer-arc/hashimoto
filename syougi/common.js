@@ -13,7 +13,6 @@ var tmp_obj = {
    player:0,
 };
 
-
 //盤面初期化[y][x]
 var board_status = new Array();
 for(var y=0;y<=8;y++){
@@ -93,7 +92,6 @@ function getTarget(event) {
    let target = event.target;
    var target_y = target.getAttribute('data-y');
    var target_x = target.getAttribute('data-x');
-   console.log(GAME_CONTROL.TURN % 2);
    if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP1){
      //駒のないますならスルー
      if(board_status[target_y][target_x].player == 0){
@@ -111,11 +109,18 @@ function getTarget(event) {
     GAME_CONTROL.PHASE_STEP1_TARGET_X = target_x;
     GAME_CONTROL.PLAYER_CONTROL_PHASE = PLAYER_CONTROL_PHASE_STEP2;
   }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2){
-    console.log(GAME_CONTROL.PHASE_STEP1_TARGET_Y == (target_y + 1));
     console.log(GAME_CONTROL.PHASE_STEP1_TARGET_Y);
-    console.log(target_y);
+    console.log(target_y + 1);
+    //歩兵は前にしか進めない
+    //先手
     if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩" && board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
-      if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (target_y + 1) && GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
+      if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) + 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
+        return ;
+      }
+    }
+    //後手
+    if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩" && board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+      if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) - 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
         return ;
       }
     }
@@ -151,7 +156,28 @@ function display(){
         var tmp_elem = document.getElementById("y" + i + "x" + j);
         tmp_elem.dataset.x = j;
         tmp_elem.dataset.y = i;
-        td.innerHTML = board_status[i][j]["piece"];
+        if(board_status[i][j]["player"] == 1){
+          td.innerHTML = board_status[i][j]["piece"];
+        }
+        //後手の場合にはコマの表示を逆さに
+        if(board_status[i][j]["player"] == 2){
+          var span = document.createElement('span');
+          span.style = "transform: rotate(180deg); display: inline-block;"
+          td.appendChild(span);
+          span.innerHTML = board_status[i][j]["piece"];
+        }
       }
     }
+    //行動表示
+    let game_control_display = document.getElementById('game_control_display');
+    if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP1 && GAME_CONTROL.TURN % 2 == 1){
+      game_control_display.innerHTML = "先手：動かすコマを決めてください";
+    }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2 && GAME_CONTROL.TURN % 2 == 1){
+      game_control_display.innerHTML = "先手：コマを動かすマス決めてください" ;
+    }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP1 && GAME_CONTROL.TURN % 2 == 0){
+      game_control_display.innerHTML = "後手：動かすコマを決めてください" ;
+    }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2 && GAME_CONTROL.TURN % 2 == 0){
+      game_control_display.innerHTML = "後手：コマを動かすマス決めてください" ;
+    }
+
 }
