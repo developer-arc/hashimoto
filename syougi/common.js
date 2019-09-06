@@ -8,9 +8,12 @@ var GAME_CONTROL = {
     PHASE_STEP1_TARGET_Y : 0
 }
 
-var tmp_obj = {
-   piece:"",
-   player:0,
+var capture_piece_list1 = new Array();
+var capture_piece_list2 = new Array();
+
+var board_obj = {
+  piece:"",
+  player:0,
 };
 
 //盤面初期化[y][x]
@@ -87,6 +90,10 @@ display();
 const board = document.getElementById("board");
 board.addEventListener("click", getTarget, false);
 
+const select_piec_reset = document.getElementById("select_piec_reset");
+select_piec_reset.addEventListener("click", selectPieceReset, false);
+
+
 //クリックされた要素のカスタムデータ取得
 function getTarget(event) {
    let target = event.target;
@@ -109,28 +116,38 @@ function getTarget(event) {
     GAME_CONTROL.PHASE_STEP1_TARGET_X = target_x;
     GAME_CONTROL.PLAYER_CONTROL_PHASE = PLAYER_CONTROL_PHASE_STEP2;
   }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2){
-    console.log(GAME_CONTROL.PHASE_STEP1_TARGET_Y);
-    console.log(target_y + 1);
-    //歩兵は前にしか進めない
-    //先手
-    if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩" && board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
-      if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) + 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
+    //歩兵行動判定
+    if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩"){
+      if(!controlActivityPawn(target_y,target_x)){
         return ;
       }
     }
-    //後手
-    if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩" && board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
-      if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) - 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
-        return ;
-      }
-    }
-    tmp_obj = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
-    board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X] = board_status[target_y][target_x];
-    board_status[target_y][target_x] = tmp_obj;
+    //駒移動
+    movePiece(target_y,target_x);
+
     GAME_CONTROL.PLAYER_CONTROL_PHASE = PLAYER_CONTROL_PHASE_STEP1;
     GAME_CONTROL.TURN++;
   }
   event.preventDefault();
+  display();
+}
+
+
+//相手の駒を取る関数
+function movePiece(target_y,target_x){
+  if(board_status[target_y][target_x].player == 0){
+    board_status[target_y][target_x] = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
+    board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X] = board_obj;
+  }else{
+    capture_piece_list1.unshift(board_status[target_y][target_x].piece);
+    board_status[target_y][target_x] = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
+    board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X] = board_obj;
+  }
+}
+
+//選んだ駒リセット
+function selectPieceReset(){
+  GAME_CONTROL.PLAYER_CONTROL_PHASE = PLAYER_CONTROL_PHASE_STEP1;
   display();
 }
 
@@ -179,5 +196,38 @@ function display(){
     }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2 && GAME_CONTROL.TURN % 2 == 0){
       game_control_display.innerHTML = "後手：コマを動かすマス決めてください" ;
     }
+    //持ち駒表示
 
+
+}
+
+
+//クリックされたマスが歩の動けるマスか判定
+function controlActivityPawn(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != parseInt(target_y) + 1 || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
+      return false;
+    }
+    console.log(board_status[parseInt(target_y) + 1][target_x].player);
+    if(board_status[target_y][target_x].player == 1){
+      console.log("aaaaaaaaaaa");
+      return false;
+    }
+    //相手のこまっだったらとる
+    if(board_status[target_y][target_x].player == 2){
+      capturePiece(target_y,target_x);
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) - 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
+      return false;
+    }
+    console.log(board_status[parseInt(target_y) - 1][target_x].player);
+    if(board_status[target_y][target_x].player == 2){
+      return false;
+    }
+  }
+  return true;
 }
