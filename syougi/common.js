@@ -16,6 +16,12 @@ var board_obj = {
   player:0,
 };
 
+//capture_piece_list初期化
+for(var i =0 ;i<20;i++){
+  capture_piece_list1.unshift(board_obj);
+  capture_piece_list2.unshift(board_obj);
+}
+
 //盤面初期化[y][x]
 var board_status = new Array();
 for(var y=0;y<=8;y++){
@@ -116,7 +122,7 @@ function getTarget(event) {
     GAME_CONTROL.PHASE_STEP1_TARGET_X = target_x;
     GAME_CONTROL.PLAYER_CONTROL_PHASE = PLAYER_CONTROL_PHASE_STEP2;
   }else if(GAME_CONTROL.PLAYER_CONTROL_PHASE == PLAYER_CONTROL_PHASE_STEP2){
-    //歩兵行動判定
+    //コマ行動判定
     if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "歩"){
       if(!controlActivityPawn(target_y,target_x)){
         return ;
@@ -168,7 +174,15 @@ function movePiece(target_y,target_x){
     board_status[target_y][target_x] = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
     board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X] = board_obj;
   }else{
-    capture_piece_list1.unshift(board_status[target_y][target_x].piece);
+    if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+      tmp_piece = board_status[target_y][target_x];
+      tmp_piece.player = 1;
+      capture_piece_list1.unshift(tmp_piece);
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+      tmp_piece = board_status[target_y][target_x];
+      tmp_piece.player = 2;
+      capture_piece_list2.unshift(tmp_piece);
+    }
     board_status[target_y][target_x] = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
     board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X] = board_obj;
   }
@@ -197,6 +211,8 @@ function display(){
         //id属性追加
         td.id = "y" + i + "x" + j;
         td.onclick = "square";
+        td.width = "33";
+        td.height = "36";
         document.getElementById("y"+i).appendChild(td);
         //カスタムデータ属性追加
         var tmp_elem = document.getElementById("y" + i + "x" + j);
@@ -226,7 +242,8 @@ function display(){
       game_control_display.innerHTML = "後手：コマを動かすマス決めてください" ;
     }
     //持ち駒表示
-
+    displayCapturePiece(1);
+    displayCapturePiece(2);
 }
 
 
@@ -516,6 +533,41 @@ function controlActivityBishop(target_y,target_x){
     }
   }
 
-
   return false;
+}
+//持ち駒表示
+function displayCapturePiece(player_number){
+  //tableタグの子要素を全て削除
+  let parent = document.getElementById('player'+player_number+'_capture_piece');
+  while(parent.lastChild){
+    parent.removeChild(parent.lastChild);
+  }
+  for(var i=0 ; i < 5 ; i++){
+    var tr = document.createElement('tr');
+    tr.id = "capture_piece_y"+i;
+    var capture_piece = document.getElementById('player'+player_number+'_capture_piece');
+    capture_piece.appendChild(tr);
+    for(var j=0 ; j < 4 ; j++){
+      var td = document.createElement('td');
+      //id属性追加
+      td.id = "capture_piece_y" + i + "capture_piece_x" + j;
+      td.width = "33";
+      td.height = "36";
+      document.getElementById("capture_piece_y"+i).appendChild(td);
+      //カスタムデータ属性追加
+      var tmp_elem = document.getElementById("capture_piece_y" + i + "capture_piece_x" + j);
+      tmp_elem.dataset.x = j;
+      tmp_elem.dataset.y = i;
+      if(player_number == 1){
+        td.innerHTML = capture_piece_list1[ j + i * 4].piece;
+      }
+      //後手の場合にはコマの表示を逆さに
+      if(player_number == 2){
+        var span = document.createElement('span');
+        span.style = "transform: rotate(180deg); display: inline-block;";
+        td.appendChild(span);
+        span.innerHTML = capture_piece_list2[ j + i * 4].piece;
+      }
+    }
+  }
 }
