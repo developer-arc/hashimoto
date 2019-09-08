@@ -121,7 +121,36 @@ function getTarget(event) {
       if(!controlActivityPawn(target_y,target_x)){
         return ;
       }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "金"){
+      if(!controlActivityGoldGeneral(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "銀"){
+      if(!controlActivitySilverGeneral(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "王"){
+      if(!controlActivityKing(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "桂"){
+      if(!controlActivityKnight(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "香"){
+      if(!controlActivityLance(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "飛"){
+      if(!controlActivityRook(target_y,target_x)){
+        return ;
+      }
+    }else if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].piece == "角"){
+      if(!controlActivityBishop(target_y,target_x)){
+        return ;
+      }
     }
+
     //駒移動
     movePiece(target_y,target_x);
 
@@ -133,7 +162,7 @@ function getTarget(event) {
 }
 
 
-//相手の駒を取る関数
+//コマ移動関数
 function movePiece(target_y,target_x){
   if(board_status[target_y][target_x].player == 0){
     board_status[target_y][target_x] = board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X];
@@ -198,7 +227,6 @@ function display(){
     }
     //持ち駒表示
 
-
 }
 
 
@@ -209,14 +237,8 @@ function controlActivityPawn(target_y,target_x){
     if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != parseInt(target_y) + 1 || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
       return false;
     }
-    console.log(board_status[parseInt(target_y) + 1][target_x].player);
     if(board_status[target_y][target_x].player == 1){
-      console.log("aaaaaaaaaaa");
       return false;
-    }
-    //相手のこまっだったらとる
-    if(board_status[target_y][target_x].player == 2){
-      capturePiece(target_y,target_x);
     }
   }
   //player2
@@ -224,10 +246,276 @@ function controlActivityPawn(target_y,target_x){
     if(GAME_CONTROL.PHASE_STEP1_TARGET_Y != (parseInt(target_y) - 1) || GAME_CONTROL.PHASE_STEP1_TARGET_X != target_x){
       return false;
     }
-    console.log(board_status[parseInt(target_y) - 1][target_x].player);
     if(board_status[target_y][target_x].player == 2){
       return false;
     }
   }
   return true;
+}
+
+//クリックされたマスが金の動けるマスか判定
+//動けないマスならfalse
+function controlActivityGoldGeneral(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x)
+    ){
+      if(board_status[target_y][target_x].player != 1){
+        return true;
+      }
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x)
+    ){
+      if(board_status[target_y][target_x].player != 2){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+//クリックされたマスが銀の動けるマスか判定
+function controlActivitySilverGeneral(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1)
+    ){
+      if(board_status[target_y][target_x].player != 1){
+        return true;
+      }
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1)
+    ){
+      if(board_status[target_y][target_x].player != 2){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
+//クリックされたマスが王の動けるマスか判定
+function controlActivityKing(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) -1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x)
+    ){
+      if(board_status[target_y][target_x].player != 1){
+        return true;
+      }
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 1 && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x)
+    ){
+      if(board_status[target_y][target_x].player != 2){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+//クリックされたマスが桂の動けるマスか判定
+function controlActivityKnight(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 2 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) + 2 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)
+    ){
+      if(board_status[target_y][target_x].player != 1){
+        return true;
+      }
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    if((GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 2 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) + 1) ||
+      (GAME_CONTROL.PHASE_STEP1_TARGET_Y == parseInt(target_y) - 2 && GAME_CONTROL.PHASE_STEP1_TARGET_X == parseInt(target_x) - 1)
+    ){
+      if(board_status[target_y][target_x].player != 2){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+//クリックされたマスが香の動けるマスか判定
+function controlActivityLance(target_y,target_x){
+  //player1
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+    for(var i = GAME_CONTROL.PHASE_STEP1_TARGET_Y-1; i > 0 ; i--){
+      if(target_y == i && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x){
+        if(board_status[target_y][target_x].player != 1){
+          return true;
+        }
+      }
+      console.log("i"+i);
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+        break;
+      }
+    }
+  }
+  //player2
+  if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+    for(var i = parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+1; i < 8 ; i++){
+      if(target_y == i && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x){
+        if(board_status[target_y][target_x].player != 2){
+          return true;
+        }
+      }
+      console.log("i"+i);
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+        break;
+      }
+    }
+  }
+  return false;
+}
+
+//クリックされたマスが飛の動けるマスか判定
+function controlActivityRook(target_y,target_x){
+  //player1,player2
+    //前
+
+    for(var i = GAME_CONTROL.PHASE_STEP1_TARGET_Y-1; i >= 0 ; i--){
+      if(target_y == i && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x){
+        if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+          return true;
+        }
+      }
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        break;
+      }
+    }
+    //後
+    for(var i = parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+1; i <= 8 ; i++){
+      if(target_y == i && GAME_CONTROL.PHASE_STEP1_TARGET_X == target_x){
+        if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+          return true;
+        }
+      }
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        break;
+      }
+    }
+    //右
+    for(var i = parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+1; i <= 8 ; i++){
+      if(target_x == i && GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y){
+        if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+          return true;
+        }
+      }
+      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        break;
+      }
+    }
+    //左
+    for(var i = parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-1; i >= 0 ; i--){
+      if(target_x == i && GAME_CONTROL.PHASE_STEP1_TARGET_Y == target_y){
+        if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+          return true;
+        }
+      }
+      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        break;
+      }
+    }
+
+  return false;
+}
+//クリックされたマスが角の動けるマスか判定
+function controlActivityBishop(target_y,target_x){
+  //player1,player2共通
+  for(var i = 1; parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i >= 0 && parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i >= 0; i++){
+    //左前
+    if(target_y == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i  && target_x == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i){
+      if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        return true;
+      }
+    }
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      break;
+    }
+  }
+  for(var i = 1; parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i >= 0 && parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X) + i <= 8 ; i++){
+    //右前
+    if(target_y == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i  && target_x == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i){
+      if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        return true;
+      }
+    }
+    console.log(parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i);
+    console.log(parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i);
+    console.log(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player);
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      break;
+    }
+  }
+  for(var i = 1; parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+ i <= 8 && parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X) - i >= 0; i++){
+    //左後
+    if(target_y == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i  && target_x == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i){
+      if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        return true;
+      }
+    }
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      break;
+    }
+  }
+  for(var i = 1; parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y) + i <= 8 && parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i <= 8; i++){
+    //右後
+    if(target_y == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i  && target_x == parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i){
+      if(board_status[target_y][target_x].player != board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+        return true;
+      }
+    }
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      break;
+    }
+  }
+
+
+  return false;
 }
