@@ -167,6 +167,28 @@ function controlBoard(event) {
   display();
 }
 
+//持ち駒制御player2
+const player2_capture_piece = document.getElementById("player2_capture_piece");
+player2_capture_piece.addEventListener("click", controlPlayer2CapturePiece, false);
+
+function controlPlayer2CapturePiece(){
+  let target = event.target;
+  var target_y = target.getAttribute('data-y');
+  var target_x = target.getAttribute('data-x');
+  console.log(capture_piece_list2[parseInt(target_x) + parseInt(target_y) * 4].piece);
+}
+
+//持ち駒制御player1
+const player1_capture_piece = document.getElementById("player1_capture_piece");
+player1_capture_piece.addEventListener("click", controlPlayer1CapturePiece, false);
+
+function controlPlayer1CapturePiece(){
+  let target = event.target;
+  var target_y = target.getAttribute('data-y');
+  var target_x = target.getAttribute('data-x');
+  console.log(capture_piece_list1[parseInt(target_x) + parseInt(target_y) * 4].piece);
+}
+
 //コマ移動関数
 function movePiece(target_y,target_x){
   if(board_status[target_y][target_x].player == 0){
@@ -549,12 +571,12 @@ function displayCapturePiece(player_number){
     for(var j=0 ; j < 4 ; j++){
       var td = document.createElement('td');
       //id属性追加
-      td.id = "capture_piece_y" + i + "capture_piece_x" + j;
+      td.id = "player" + player_number + "_capture_piece_y" + i + "capture_piece_x" + j;
       td.width = "33";
       td.height = "36";
       document.getElementById(player_number + "capture_piece_y"+i).appendChild(td);
       //カスタムデータ属性追加
-      var tmp_elem = document.getElementById("capture_piece_y" + i + "capture_piece_x" + j);
+      var tmp_elem = document.getElementById("player" + player_number + "_capture_piece_y" + i + "capture_piece_x" + j);
       tmp_elem.dataset.x = j;
       tmp_elem.dataset.y = i;
       if(player_number == 1){
