@@ -94,14 +94,14 @@ for(var y=0;y<=8;y++){
 display();
 
 const board = document.getElementById("board");
-board.addEventListener("click", getTarget, false);
+board.addEventListener("click", controlBoard, false);
 
 const select_piec_reset = document.getElementById("select_piec_reset");
 select_piec_reset.addEventListener("click", selectPieceReset, false);
 
 
 //クリックされた要素のカスタムデータ取得
-function getTarget(event) {
+function controlBoard(event) {
    let target = event.target;
    var target_y = target.getAttribute('data-y');
    var target_x = target.getAttribute('data-x');
@@ -166,7 +166,6 @@ function getTarget(event) {
   event.preventDefault();
   display();
 }
-
 
 //コマ移動関数
 function movePiece(target_y,target_x){
@@ -244,6 +243,8 @@ function display(){
     //持ち駒表示
     displayCapturePiece(1);
     displayCapturePiece(2);
+
+
 }
 
 
@@ -408,8 +409,7 @@ function controlActivityLance(target_y,target_x){
           return true;
         }
       }
-      console.log("i"+i);
-      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 1){
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player != 0){
         break;
       }
     }
@@ -422,8 +422,7 @@ function controlActivityLance(target_y,target_x){
           return true;
         }
       }
-      console.log("i"+i);
-      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == 2){
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player != 0){
         break;
       }
     }
@@ -442,7 +441,7 @@ function controlActivityRook(target_y,target_x){
           return true;
         }
       }
-      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player != 0){
         break;
       }
     }
@@ -453,7 +452,7 @@ function controlActivityRook(target_y,target_x){
           return true;
         }
       }
-      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      if(board_status[i][GAME_CONTROL.PHASE_STEP1_TARGET_X].player != 0){
         break;
       }
     }
@@ -464,7 +463,7 @@ function controlActivityRook(target_y,target_x){
           return true;
         }
       }
-      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player != 0){
         break;
       }
     }
@@ -475,7 +474,7 @@ function controlActivityRook(target_y,target_x){
           return true;
         }
       }
-      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+      if(board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][i].player != 0){
         break;
       }
     }
@@ -492,7 +491,7 @@ function controlActivityBishop(target_y,target_x){
         return true;
       }
     }
-    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player != 0){
       break;
     }
   }
@@ -506,7 +505,7 @@ function controlActivityBishop(target_y,target_x){
     console.log(parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i);
     console.log(parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i);
     console.log(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player);
-    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)-i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player != 0){
       break;
     }
   }
@@ -517,7 +516,7 @@ function controlActivityBishop(target_y,target_x){
         return true;
       }
     }
-    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)-i].player != 0){
       break;
     }
   }
@@ -528,7 +527,7 @@ function controlActivityBishop(target_y,target_x){
         return true;
       }
     }
-    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player == board_status[GAME_CONTROL.PHASE_STEP1_TARGET_Y][GAME_CONTROL.PHASE_STEP1_TARGET_X].player){
+    if(board_status[parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_Y)+i][parseInt(GAME_CONTROL.PHASE_STEP1_TARGET_X)+i].player != 0){
       break;
     }
   }
@@ -544,7 +543,7 @@ function displayCapturePiece(player_number){
   }
   for(var i=0 ; i < 5 ; i++){
     var tr = document.createElement('tr');
-    tr.id = "capture_piece_y"+i;
+    tr.id = player_number + "capture_piece_y"+i;
     var capture_piece = document.getElementById('player'+player_number+'_capture_piece');
     capture_piece.appendChild(tr);
     for(var j=0 ; j < 4 ; j++){
@@ -553,7 +552,7 @@ function displayCapturePiece(player_number){
       td.id = "capture_piece_y" + i + "capture_piece_x" + j;
       td.width = "33";
       td.height = "36";
-      document.getElementById("capture_piece_y"+i).appendChild(td);
+      document.getElementById(player_number + "capture_piece_y"+i).appendChild(td);
       //カスタムデータ属性追加
       var tmp_elem = document.getElementById("capture_piece_y" + i + "capture_piece_x" + j);
       tmp_elem.dataset.x = j;
